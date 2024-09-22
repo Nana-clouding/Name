@@ -58,6 +58,13 @@
             "杉本", "鈴村", "谷口", "片桐", "大野", "渡部", "小野", "丸山", "井口", "石井"
         ];
 
+        function getRandomDate() {
+            const year = Math.floor(Math.random() * 51) + 1950; // 1950-2000
+            const month = Math.floor(Math.random() * 12) + 1; // 1-12
+            const day = Math.floor(Math.random() * 25) + 1; // 1-25
+            return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+
         function generateNames() {
             const count = document.getElementById("count").value;
             const nameContainer = document.getElementById("name-container");
@@ -66,9 +73,12 @@
             for (let i = 0; i < count; i++) {
                 const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
                 const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const email = `${randomFirstName.toLowerCase()}${randomLastName.toLowerCase()}@tbnetwork.net`;
+                const birthDate = getRandomDate();
+
                 const nameElement = document.createElement("div");
                 nameElement.className = "generated-name";
-                nameElement.textContent = randomLastName + " " + randomFirstName;
+                nameElement.textContent = `名前: ${randomLastName} ${randomFirstName}, メール: ${email}, 生年月日: ${birthDate}`;
 
                 // コピーボタンを作成
                 const copyButton = document.createElement("button");
