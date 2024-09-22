@@ -58,13 +58,6 @@
             "杉本", "鈴村", "谷口", "片桐", "大野", "渡部", "小野", "丸山", "井口", "石井"
         ];
 
-        function getRandomDate() {
-            const year = Math.floor(Math.random() * 51) + 1950; // 1950-2000
-            const month = Math.floor(Math.random() * 12) + 1; // 1-12
-            const day = Math.floor(Math.random() * 25) + 1; // 1-25
-            return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        }
-
         function generateNames() {
             const count = document.getElementById("count").value;
             const nameContainer = document.getElementById("name-container");
@@ -73,12 +66,23 @@
             for (let i = 0; i < count; i++) {
                 const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
                 const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-                const email = `${randomFirstName.toLowerCase()}${randomLastName.toLowerCase()}@tbnetwork.net`;
-                const birthDate = getRandomDate();
+                
+                // ローマ字変換（簡易的）
+                const romajiFirstName = randomFirstName.replace(/大/g, 'Dai').replace(/陽/g, 'You').replace(/悠/g, 'Yuu')
+                    .replace(/蓮/g, 'Ren').replace(/琉/g, 'Ryu').replace(/海/g, 'Kai').replace(/陸/g, 'Riku')
+                    .replace(/和/g, 'Kazu').replace(/翔/g, 'Sho').replace(/直/g, 'Nao').replace(/健/g, 'Ken')
+                    .replace(/優/g, 'Yuu').replace(/聡/g, 'Sato').replace(/大輝/g, 'Daiki').replace(/智/g, 'Tom')
+                    .replace(/聖/g, 'Sei').replace(/瑞/g, 'Zui').replace(/新/g, 'Arata').replace(/悠真/g, 'Yuma');
+
+                const romajiLastName = randomLastName.replace(/佐/g, 'Sato').replace(/鈴/g, 'Suzuki').replace(/高/g, 'Takahashi')
+                    .replace(/田/g, 'Taka').replace(/中/g, 'Naka').replace(/小/g, 'Ko').replace(/加/g, 'Kato')
+                    .replace(/吉/g, 'Yoshida').replace(/山/g, 'Yama').replace(/井/g, 'I').replace(/本/g, 'Moto');
+
+                const email = `${romajiFirstName.toLowerCase()}${romajiLastName.toLowerCase()}@tbnetwork.net`;
 
                 const nameElement = document.createElement("div");
                 nameElement.className = "generated-name";
-                nameElement.textContent = `名前: ${randomLastName} ${randomFirstName}, メール: ${email}, 生年月日: ${birthDate}`;
+                nameElement.textContent = `名前: ${randomLastName} ${randomFirstName}, メール: ${email}`;
 
                 // コピーボタンを作成
                 const copyButton = document.createElement("button");
