@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自動名前生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        #name-container {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .generated-name {
+            margin: 5px 0;
+            font-size: 20px;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <h1>自動名前生成器</h1>
+    <label for="count">生成する名前の個数:</label>
+    <input type="number" id="count" min="1" max="10" value="1">
+    <button onclick="generateNames()">名前を生成</button>
+
+    <div id="name-container"></div>
+
+    <script>
+        const firstNames = [
+            "大翔", "陽翔", "悠真", "蓮", "琉斗", "海斗", "陸", "大和", "翔", "陸斗",
+            "蓮斗", "直樹", "健太", "拓海", "聡太", "優斗", "颯太", "大輝", "智也", "和樹",
+            "優真", "聖", "瑞樹", "新", "悠", "智", "慶", "剛", "士", "颯",
+            "陽太", "純", "響", "秀斗", "悠希", "泰斗", "光", "徹", "真", "秀",
+            "雅", "勇気", "裕樹", "信", "航", "貴大", "怜", "剛志", "優介", "拓郎"
+        ];
+
+        const lastNames = [
+            "佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺", "山本", "中村", "小林", "加藤",
+            "吉田", "山田", "佐々木", "山口", "井上", "松本", "清水", "斉藤", "福田", "後藤",
+            "岡田", "前田", "長谷川", "村上", "石川", "藤田", "金子", "坂本", "田辺", "小川",
+            "原田", "岡本", "安藤", "横山", "中島", "高木", "田島", "久保", "西村", "白石",
+            "杉本", "鈴村", "谷口", "片桐", "大野", "渡部", "小野", "丸山", "井口", "石井"
+        ];
+
+        function generateNames() {
+            const count = document.getElementById("count").value;
+            const nameContainer = document.getElementById("name-container");
+            nameContainer.innerHTML = ''; // 既存の名前をクリア
+
+            for (let i = 0; i < count; i++) {
+                const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const nameElement = document.createElement("div");
+                nameElement.className = "generated-name";
+                nameElement.textContent = randomLastName + " " + randomFirstName;
+                nameContainer.appendChild(nameElement);
+            }
+        }
+    </script>
+</body>
+</html>
